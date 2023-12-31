@@ -349,6 +349,25 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 3.5,
 		num: 210,
 	},
+	tntbattlebond: {
+		onAfterMoveSecondary(target, source, move){
+			//if (effect?.effectType !== 'Move') return; //effect does not want to work for some reason (Cannot find name 'effect'.ts(2304))
+			if (source.species.id === 'mimikyu' && source.hp && !source.transformed && source.side.foePokemonLeft()) {
+				this.add('-activate', source, 'ability: Tnt-Battle-Bond');
+				source.formeChange('mimikyubattlebond', this.effect, true);
+			}
+		},
+		onModifyMovePriority: -1,
+		onModifyMove(move, attacker) {
+			if(move.id === "shadowsneak" && attacker.species.name === "Mimikyu-TnT" && !attacker.transformed){
+				move.basePower=50; //unsure how to set the damage of shadowsneak atm
+				this.action.useMove("substitute", attacker);
+			}
+		},
+		name: "TnT Battle Bond",
+		isNonstandard: null,
+    	rating: 4,
+	},	
 	beadsofruin: {
 		onStart(pokemon) {
 			if (this.suppressingAbility(pokemon)) return;
